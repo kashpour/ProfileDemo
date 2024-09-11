@@ -214,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(width: 5.0),
                 GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/signupScreen');
+                      Navigator.pushReplacementNamed(context, '/signupScreen');
                     },
                     child: const Text(
                       "Sign Up",
