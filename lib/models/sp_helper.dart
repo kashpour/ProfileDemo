@@ -18,4 +18,12 @@ class SpHelper {
   getUser(String id) {
     return prefes.getStringList(id);
   }
+
+  Future setUserPrefes(bool isDarkMode) async {
+    await prefes.setBool('isDarkMode', isDarkMode);
+  }
+
+  getUserPrefes(String isDarkMode) {
+    return prefes.getBool(isDarkMode);
+  }
 }

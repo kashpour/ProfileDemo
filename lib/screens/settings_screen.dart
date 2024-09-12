@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:profile_demo/main.dart';
 import 'package:profile_demo/models/http_helper.dart';
 import 'package:profile_demo/models/sp_helper.dart';
 import 'package:profile_demo/models/user_info.dart';
@@ -17,7 +18,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   HttpHelper httpHelper = HttpHelper();
   bool isShownPassword = false;
-  bool isDarkMode = false;
+  late bool isDarkMode;
+
   TextEditingController txtUsername = TextEditingController();
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
@@ -26,6 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     spHelper.init();
     setUserToTxt();
+    getUserPrefes();
     super.initState();
   }
 
@@ -40,21 +43,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
             setState(() {
               if (isDarkMode) {
                 isDarkMode = false;
+                MyApp.of(context).changeTheme(ThemeMode.light);
               } else {
                 isDarkMode = true;
+                MyApp.of(context).changeTheme(ThemeMode.dark);
               }
+              saveUserPrefs();
             });
           },
-          icon: isDarkMode
+          icon: spHelper.getUserPrefes('isDarkMode')
               ? const Icon(
-                  Icons.dark_mode,
-                  size: 32.0,
-                  color: Colors.black,
-                )
-              : const Icon(
                   Icons.light_mode,
                   size: 32.0,
                   color: Colors.white,
+                )
+              : const Icon(
+                  Icons.dark_mode,
+                  size: 32.0,
+                  color: Colors.black,
                 ),
         ),
         actions: [
@@ -86,6 +92,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextField(
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
                 controller: txtUsername,
                 decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -114,6 +123,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 16.0),
               TextField(
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
                 controller: txtEmail,
                 decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -142,6 +154,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               const SizedBox(height: 16.0),
               TextField(
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
                 controller: txtPassword,
                 obscureText: !isShownPassword,
                 decoration: InputDecoration(
@@ -235,9 +250,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     txtPassword.text = '';
   }
 
-  // void updateScreen() async {
-  //   setState(() {
+  void saveUserPrefs() async {
+    await spHelper.setUserPrefes(isDarkMode);
+  }
 
-  //   });
-  // }
+  void getUserPrefes() {
+    isDarkMode = spHelper.getUserPrefes('isDarkMode') ?? false;
+  }
 }
