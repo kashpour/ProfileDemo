@@ -7,6 +7,8 @@ class CustomeButtomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+        selectedItemColor: Colors.black,
+        backgroundColor: Colors.amber[700],
         currentIndex: index,
         onTap: (int value) {
           if (value == 0) {

@@ -13,12 +13,12 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   SpHelper spHelper = SpHelper();
-
   HttpHelper httpHelper = HttpHelper();
   bool isShownPassword = false;
   TextEditingController txtUsername = TextEditingController();
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -246,17 +246,17 @@ class _LoginScreenState extends State<LoginScreen> {
           userInfo.password == txtPassword.text) {
         spHelper.setUser(userInfo);
         if (!context.mounted) return;
-        await customShowDialog(context, "Loged in Successfully");
+        await customShowDialog(context, "Loged in Successfully", 'OK');
         if (!context.mounted) return;
         Navigator.pop(context);
         Navigator.pushReplacementNamed(context, '/homeScreen');
       } else {
         if (!context.mounted) return;
-        customShowDialog(context, "incorrect username or password! ");
+        customShowDialog(context, "incorrect username or password! ", 'OK');
       }
     } else {
       if (!context.mounted) return;
-      customShowDialog(context, "Username not found!");
+      customShowDialog(context, "Username not found!", 'OK');
     }
   }
 }

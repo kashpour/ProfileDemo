@@ -46,4 +46,14 @@ class HttpHelper {
         await http.put(uri, body: jsonEncode(userInfo.toJson()));
     return response;
   }
+
+  Future<bool> deleteUserData(String username) async {
+    Uri uri = Uri.parse('$url/$username');
+    http.Response response = await http.delete(uri);
+    if(response.statusCode == 200){
+      return true;
+    }else{
+      return false;
+    }
+  }
 }

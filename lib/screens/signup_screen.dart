@@ -303,7 +303,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
         if (isUsernameExsit) {
           if (!context.mounted) return;
-          customShowDialog(context, "Username exsit try another username!");
+          customShowDialog(context, "Username exsit try another username!", 'OK');
         } else {
           UserInfo userInfo =
               UserInfo(txtUsername.text, txtEmail.text, txtPassword.text);
@@ -314,16 +314,16 @@ class _SignupScreenState extends State<SignupScreen> {
           txtPassword.text = "";
           txtUsername.selection;
           if (!context.mounted) return;
-          await customShowDialog(context, "Signed Up Sucssefuly");
+          await customShowDialog(context, "Signed Up Sucssefuly", 'OK');
           if (!context.mounted) return;
           Navigator.pop(context);
         }
       } else {
         customShowDialog(
-            context, "Please agree to the terms & conditions first");
+            context, "Please agree to the terms & conditions first", 'OK');
       }
     } else {
-      customShowDialog(context, "Please Fill all the fields and try again!");
+      customShowDialog(context, "Please Fill all the fields and try again!", 'OK');
     }
   }
 }

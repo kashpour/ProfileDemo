@@ -23,6 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   TextEditingController txtUsername = TextEditingController();
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
+  TextEditingController txtPasswordDelete = TextEditingController();
 
   @override
   void initState() {
@@ -208,7 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 16.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    updateUserData();
+                    postUserData(context);
                   },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
@@ -227,6 +228,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    deleteUserData(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    elevation: 3.0,
+                    fixedSize: Size(width, 60),
+                    backgroundColor: Colors.red,
+                  ),
+                  child: const Text(
+                    "Delete Account",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ]),
       ),
       bottomNavigationBar: const CustomeButtomNavigation(index: 1),
@@ -234,20 +258,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future setUserToTxt() async {
-    List<String> userData = await spHelper.getUser('ibrahim');
+    List<String> userData = await spHelper.getUser('ibo');
     if (userData.isNotEmpty) {
       txtUsername.text = userData[0];
       txtEmail.text = userData[1];
     }
   }
 
-  Future updateUserData() async {
+  Future postUserData(BuildContext context) async {
     UserInfo userInfo =
         UserInfo(txtUsername.text, txtEmail.text, txtPassword.text);
     await httpHelper.putData(userInfo);
     await spHelper.setUser(userInfo);
-    customShowDialog(context, 'Saved Updated Data');
+    if (!context.mounted) return;
+    customShowDialog(context, 'Saved Updated Data', 'Ok');
     txtPassword.text = '';
+  }
+
+  Future deleteUserData(BuildContext context) async {
+    TextField txtPassword = TextField(
+      controller: txtPasswordDelete,
+      decoration: const InputDecoration(hintText: 'Password'),
+    );
+    await customShowDialog(
+        context, 'Enter password to delete your account', 'Delete',
+        txtPassword: txtPassword);
+    if (txtPasswordDelete.text != '') {
+      UserInfo user = await httpHelper.getUserData(txtUsername.text);
+      if (txtPasswordDelete.text == user.password) {
+        bool isSuccess = await httpHelper.deleteUserData(txtUsername.text);
+        if (isSuccess) {
+          if (!context.mounted) return;
+          await customShowDialog(context, "Account Deleted Successfully", 'OK');
+          if (!context.mounted) return;
+
+          Navigator.pushReplacementNamed(context, '/');
+        } else {
+          if (!context.mounted) return;
+
+          await customShowDialog(
+              context, "Could Not Delete Account Please Try Again", 'OK');
+        }
+      } else {
+        customShowDialog(context, 'Wrong password! try again', 'OK');
+      }
+    } else {
+      customShowDialog(
+          context, 'Please enter your password and try again', 'OK');
+    }
+    txtPasswordDelete.text = '';
   }
 
   void saveUserPrefs() async {
