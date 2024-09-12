@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:profile_demo/models/http_helper.dart';
+import 'package:profile_demo/models/sp_helper.dart';
 import 'package:profile_demo/models/user_info.dart';
 import 'package:profile_demo/shared/custome_show_dialog.dart';
 
@@ -11,11 +12,18 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  SpHelper spHelper = SpHelper();
+
   HttpHelper httpHelper = HttpHelper();
   bool isShownPassword = false;
   TextEditingController txtUsername = TextEditingController();
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    spHelper.init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,14 +109,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             });
                           },
                           icon: isShownPassword
-                              ? Image.asset(
+                              ? const Icon(
+                                  Icons.remove_red_eye,
+                                )
+                              : Image.asset(
                                   width: 40.0,
                                   height: 40.0,
                                   './assets/show_password.jpg',
                                   fit: BoxFit.cover,
-                                )
-                              : const Icon(
-                                  Icons.remove_red_eye,
                                 )),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -236,6 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (userInfo.username != '') {
       if (userInfo.username == txtUsername.text &&
           userInfo.password == txtPassword.text) {
+        spHelper.setUser(userInfo);
         if (!context.mounted) return;
         await customShowDialog(context, "Loged in Successfully");
         if (!context.mounted) return;

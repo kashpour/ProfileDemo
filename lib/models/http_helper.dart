@@ -39,4 +39,11 @@ class HttpHelper {
         await http.post(uri, body: jsonEncode(userInfo.toJson()));
     return response;
   }
+
+  Future putData(UserInfo userInfo) async {
+    Uri uri = Uri.parse('$url/${userInfo.username}');
+    http.Response response =
+        await http.put(uri, body: jsonEncode(userInfo.toJson()));
+    return response;
+  }
 }

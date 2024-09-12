@@ -46,7 +46,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ],
               ),
             ),
-            // const SizedBox(height: 20.0),
             const Text(
               "Join our Profile Demo app to get access to the new unlimited products.",
               style: TextStyle(
@@ -54,7 +53,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 fontWeight: FontWeight.w300,
               ),
             ),
-            // const SizedBox(height: 20.0),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -140,14 +138,14 @@ class _SignupScreenState extends State<SignupScreen> {
                             });
                           },
                           icon: isShownPassword
-                              ? Image.asset(
+                              ? const Icon(
+                                  Icons.remove_red_eye,
+                                )
+                              : Image.asset(
                                   width: 40.0,
                                   height: 40.0,
                                   './assets/show_password.jpg',
                                   fit: BoxFit.cover,
-                                )
-                              : const Icon(
-                                  Icons.remove_red_eye,
                                 )),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
