@@ -3,7 +3,6 @@ import 'package:profile_demo/main.dart';
 import 'package:profile_demo/models/http_helper.dart';
 import 'package:profile_demo/models/sp_helper.dart';
 import 'package:profile_demo/models/user_info.dart';
-import 'package:profile_demo/shared/custome_buttom_navigation.dart';
 import 'package:profile_demo/shared/custome_show_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -19,6 +18,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   HttpHelper httpHelper = HttpHelper();
   bool isShownPassword = false;
   late bool isDarkMode;
+  Map userData = {};
+  int index = 1;
 
   TextEditingController txtUsername = TextEditingController();
   TextEditingController txtEmail = TextEditingController();
@@ -28,15 +29,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     spHelper.init();
-    setUserToTxt();
     getUserPrefes();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    userData = userData.isNotEmpty
+        ? userData
+        : ModalRoute.of(context)!.settings.arguments as Map;
     final double width = MediaQuery.of(context).size.width;
-
+    txtUsername.text = userData['username'];
+    txtEmail.text = userData['email'];
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -253,16 +257,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ]),
       ),
-      bottomNavigationBar: const CustomeButtomNavigation(index: 1),
+      // bottomNavigationBar: const CustomeButtomNavigation(index: 1),
+      bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Colors.black,
+          backgroundColor: Colors.amber[700],
+          currentIndex: index,
+          onTap: (int value) {
+            if (value == 0) {
+              Navigator.pushReplacementNamed(context, '/homeScreen',
+                  arguments: {
+                    'username': userData['username'],
+                    'email': userData['email'],
+                  });
+            } else if (value == 1) {
+              Navigator.pushReplacementNamed(context, '/settingsScreen');
+            }
+          },
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings), label: 'Settings'),
+          ]),
     );
-  }
-
-  Future setUserToTxt() async {
-    List<String> userData = await spHelper.getUser('ibo');
-    if (userData.isNotEmpty) {
-      txtUsername.text = userData[0];
-      txtEmail.text = userData[1];
-    }
   }
 
   Future postUserData(BuildContext context) async {
@@ -277,6 +293,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future deleteUserData(BuildContext context) async {
     TextField txtPassword = TextField(
+      obscureText: true,
       controller: txtPasswordDelete,
       decoration: const InputDecoration(hintText: 'Password'),
     );

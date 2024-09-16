@@ -249,7 +249,10 @@ class _LoginScreenState extends State<LoginScreen> {
         await customShowDialog(context, "Loged in Successfully", 'OK');
         if (!context.mounted) return;
         Navigator.pop(context);
-        Navigator.pushReplacementNamed(context, '/homeScreen');
+        Navigator.pushReplacementNamed(context, '/homeScreen', arguments: {
+          'username': userInfo.username,
+          'email': userInfo.email
+        });
       } else {
         if (!context.mounted) return;
         customShowDialog(context, "incorrect username or password! ", 'OK');

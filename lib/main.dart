@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.dark,
       ),
       themeMode: _themeMode,
-      initialRoute: '/loginScreen',
+      initialRoute: '/',
       routes: {
         '/': (context) => const LandingScreen(),
         '/signupScreen': (context) => const SignupScreen(),
