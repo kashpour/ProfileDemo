@@ -317,9 +317,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context, "Could Not Delete Account Please Try Again", 'OK');
         }
       } else {
+        if (!context.mounted) return;
         customShowDialog(context, 'Wrong password! try again', 'OK');
       }
     } else {
+      if (!context.mounted) return;
       customShowDialog(
           context, 'Please enter your password and try again', 'OK');
     }
